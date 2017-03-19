@@ -1,0 +1,84 @@
+#!/usr/bin/env bash
+
+# Verify Git is installed:
+if [ ! $(which git) ]; then
+  echo "Git is not installed, can't continue."
+  exit 1
+fi
+
+# Check if scons installed
+if [ ! $(which scons) ]; then
+   echo "Scons is not installed, can't continue."
+   exit 1
+fi
+
+# Check if glib-2.0 is installed
+if [[ -z $(pkg-config --list-all | grep glib-2.0) ]]; then
+   echo "Glib-2.0 is not installed, can't continue."
+   exit 1
+fi
+
+# Check if hammer already installed
+# if [[ ! -z $(pkg-config --list-all | grep libhammer) ]]; then
+#    echo "Hammer is already installed."
+#    exit 1
+# fi
+
+# Exit if no arguments given
+if [ $# -eq 0 ]
+  then
+    echo "Hammer installer needs an argument!"
+    echo "-a for install hammer "
+    echo "-r to install hammer with ruby bindings"
+    exit 1
+fi
+
+# Clone hammer source code
+git clone https://github.com/UpstandingHackers/hammer
+
+# Parsing the argument and acting on it now
+while getopts ":a:r" opt; do
+  case $opt in
+    a)
+      cd hammer
+      echo "Installing hammer..."
+ 
+      # Run scons
+      scons
+
+      # Run scons install
+      sudo scons install
+      ;;
+    r)
+      cd hammer
+      echo "Installing hammer with ruby bindings..."
+
+      
+      if [ ! $(which ruby) ]; then
+	  echo "Ruby is not installed, can't continue."
+	  exit 1
+      fi
+
+
+      if [ ! $(which gem) ]; then
+	  echo "Gem is not installed, can't continue."
+	  exit 1
+      fi
+
+      scons bindings=ruby
+
+      sudo scons bindings=ruby install
+
+      gem install hammer-parser
+      ;;
+    \?)
+      echo "Invalid option: -$OPTARG" >&2
+      exit 1
+      ;;
+    :)
+      echo "Option -$OPTARG requires an argument." >&2
+      exit 1
+      ;;
+  esac
+done
+

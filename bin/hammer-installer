@@ -37,7 +37,7 @@ fi
 git clone https://github.com/UpstandingHackers/hammer
 
 # Parsing the argument and acting on it now
-while getopts ":a:r" opt; do
+while getopts "ar" opt; do
   case $opt in
     a)
       cd hammer

@@ -9,6 +9,16 @@ This tool could be used to install the [hammer parser combinator toolkit](https:
 - scons
 - ruby >= 2.0.0 if installing ruby bindings 
 
+## Installing dependencies
+
+### Mac OSX 
+
+    brew install glib scons curl
+    
+### Ubuntu
+    
+    sudo apt-get install gcc scons pkg-config libglib2.0-0 glib2.0-dev curl
+
 ## Install hammer 
 
 To install hammer as it is...
